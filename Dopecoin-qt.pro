@@ -209,7 +209,6 @@ HEADERS += src/qt/bitcoingui.h \
     src/version.h \
     src/netbase.h \
     src/clientversion.h \
-    src/qt/dopesend.h \
     src/qt/httpsocket.h \
     src/qt/sendmessagesdialog.h \
     src/qt/sendmessagesentry.h \
@@ -293,7 +292,6 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/scrypt-x86_64.S \
     src/scrypt_mine.cpp \
     src/pbkdf2.cpp \
-    src/qt/dopesend.cpp \
     src/qt/httpsocket.cpp \
     src/lz4/lz4.c \
     src/xxhash/xxhash.c \

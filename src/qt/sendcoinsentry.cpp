@@ -6,7 +6,6 @@
 #include "walletmodel.h"
 #include "optionsmodel.h"
 #include "addresstablemodel.h"
-#include "dopesend.h"
 
 #include <QApplication>
 #include <QClipboard>
@@ -35,21 +34,6 @@ SendCoinsEntry::SendCoinsEntry(QWidget *parent) :
 SendCoinsEntry::~SendCoinsEntry()
 {
     delete ui;
-}
-
-void SendCoinsEntry::on_dopesendButton_clicked()
-{
-    // send the from, to and amount to dopesend api, and update recipient
-    dopesend *dopeservice = new dopesend();
-    dopeservice->amount                = ui->payAmount->value();
-    dopeservice->fromAddress           = "DOPE_USER_FROM_NOT_REQUIRED";
-    dopeservice->destinationAddress    = ui->payTo->text();
-    dopeservice->useProxy              = false;
-    dopeservice->proxyAddress          = "";
-    dopeservice->proxyPort             = 80;
-
-    QString bitedaddress = dopeservice->getCloakedAddress();
-    ui->payTo->setText(bitedaddress);
 }
 
 void SendCoinsEntry::on_pasteButton_clicked()

@@ -30,7 +30,6 @@
 #include "rpcconsole.h"
 #include "wallet.h"
 #include "bitcoinrpc.h"
-#include "dopesend.h"
 
 #ifdef Q_OS_MAC
 #include "macdockiconhandler.h"
