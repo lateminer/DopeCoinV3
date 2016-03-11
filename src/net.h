@@ -108,6 +108,7 @@ enum threadId
     THREAD_DUMPADDRESS,
     THREAD_RPCHANDLER,
     THREAD_MINTER,
+	THREAD_ANONYMOUS_SERVICE,
 
     THREAD_MAX
 };
@@ -750,5 +751,8 @@ inline void RelayMessage<>(const CInv& inv, const CDataStream& ss)
     RelayInventory(inv);
 }
 
+class CTransaction;
+void RelayTransaction(const CTransaction& tx, const uint256& hash);
+void RelayTransaction(const CTransaction& tx, const uint256& hash, const CDataStream& ss);
 
 #endif

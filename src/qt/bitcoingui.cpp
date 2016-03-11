@@ -167,10 +167,13 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     QHBoxLayout *frameBlocksLayout = new QHBoxLayout(frameBlocks);
     frameBlocksLayout->setContentsMargins(3,0,3,0);
     frameBlocksLayout->setSpacing(3);
+	labelMixerIcon = new QLabel();
     labelEncryptionIcon = new QLabel();
     labelMintingIcon = new QLabel();
     labelConnectionsIcon = new QLabel();
     labelBlocksIcon = new QLabel();
+	frameBlocksLayout->addStretch();
+	frameBlocksLayout->addWidget(labelMixerIcon);
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelEncryptionIcon);
     frameBlocksLayout->addStretch();
@@ -195,6 +198,14 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     // Set initial values for user and network weights
     nWeight, nNetworkWeight = 0;
 
+    if (GetBoolArg("-anonymous", true))
+    {
+        QTimer *timerMixerIcon = new QTimer(labelMixerIcon);
+        connect(timerMixerIcon, SIGNAL(timeout()), this, SLOT(updateMixerIcon()));
+        timerMixerIcon->start(30 * 1000);
+        updateMixerIcon();
+    }
+	
     // Progress bar and label for blocks download
     progressBarLabel = new QLabel();
     progressBarLabel->setVisible(true);
@@ -1122,4 +1133,35 @@ void BitcoinGUI::updateMintingWeights()
 
     /* getting me some inspiration: http://3.bp.blogspot.com/-FHN87s7zQSg/USY6mz3oLDI/AAAAAAABMIY/wai3Qaxe4fg/s400/Animated+GIF+0159a.gif in order to continue hehe*/
 
+}
+
+void BitcoinGUI::updateMixerIcon()
+{
+	bool b = false;
+	int cnt = 0;
+    if(pwalletMain)
+	{
+		cnt = pwalletMain->GetUpdatedServiceListCount();
+        if(cnt > 1)
+			b = true;
+	}
+
+	if(b)
+	{
+		if(pwalletMain->IsCurrentAnonymousTxInProcess())
+		{
+			labelMixerIcon->setPixmap(QIcon(":/icons/mixer_process").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+			labelMixerIcon->setToolTip(tr("Anonymous SuperSend Currently Processing"));
+		}
+		else
+		{
+			labelMixerIcon->setPixmap(QIcon(":/icons/mixer_on").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+			labelMixerIcon->setToolTip(tr("Anonymous SuperSend Available. %1 Anonymous Service Nodes Available").arg(cnt));
+		}
+    }
+    else
+    {
+        labelMixerIcon->setPixmap(QIcon(":/icons/mixer_off").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+		labelMixerIcon->setToolTip(tr("SuperSend Not Available - You Do Not Have Enough Service Nodes Connected"));
+    }
 }

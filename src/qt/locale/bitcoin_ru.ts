@@ -594,6 +594,18 @@ Address: %4
         <source>Not minting.</source>
         <translation>Не участвуем в доле</translation>
     </message>
+    <message>
+        <source>Anonymous SuperSend Currently Processing</source>
+        <translation>Выполняется обработка анонимной SuperSend-транзакции</translation>
+    </message>
+    <message>
+        <source>Anonymous SuperSend Available. %1 Anonymous Service Nodes Available</source>
+        <translation>SuperSend доступен. Подключено %1 анонимных сервисных узлов</translation>
+    </message>
+    <message>
+        <source>SuperSend Not Available - You Do Not Have Enough Service Nodes Connected</source>
+        <translation>SuperSend недоступен. Подключено недостаточное количество сервисных узлов</translation>
+    </message>
 </context>
 <context>
     <name>ClientModel</name>
@@ -1205,7 +1217,6 @@ Address: %4
         <translation>нет</translation>
     </message>	
 </context>	
-
 <context>
     <name>SendCoinsDialog</name>
     <message>
@@ -1215,8 +1226,8 @@ Address: %4
         <translation>Отправка</translation>
     </message>
     <message>
-        <source>custom change address</source>
-        <translation>Свой адрес для сдачи</translation>
+        <source>Anonymous Send - each send is limited to max 100,000 DOPE. 1% fee (min 10 DOPE) will be added to the TX</source>
+        <translation>Анонимная отправка. Максимальная сумма перевода 100,000 DOPE. Комиссия за транзакцию составляет 1% (мин. 10 DOPE)</translation>
     </message>
 	<message>
         <source>Quantity:</source>
@@ -1431,6 +1442,21 @@ Address: %4
         <source>Error: The transaction was rejected. This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
         <translation>Ошибка: В транзакции отказано.  Такое может произойти, если некоторые монеты уже были потрачены, например, если Вы используете одну копию файла wallet.dat, а монеты были потрачены из другой копии, но не были отмечены как потраченные в этой.</translation>
     </message>
+    <message>
+        <location line="+5"/>
+        <source>SuperSend only allows maximum of 100,000 DOPE now. Please reduce send amount or use regular send.</source>
+        <translation>SuperSend позволяет максимально отправить максимум 100,000 DOPE. Уменьшите сумму или используйте обычную отправку.</translation>
+    </message>	
+    <message>
+        <location line="+5"/>
+        <source>SuperSend requires at least 2 anonymous service nodes available. You don't have enough service nodes connected. Please use regular-send or try later.</source>
+        <translation>SuperSend требует как минимум 2 доступных анонимных узла. Сейчас подключено недостаточно сервисных узлов. Используйте обычную отправку или попробуйте позже.</translation>
+    </message>	
+    <message>
+        <location line="+5"/>
+        <source>Another SuperSend transaction still in progress. Please wait it finishes before starting a new SuperSend.</source>
+        <translation>Обрабатывается другая SuperSend-транзакция. Подождите завершения её обработки перед использованием SuperSend.</translation>
+    </message>	
 </context>
 <context>
     <name>SendCoinsEntry</name>

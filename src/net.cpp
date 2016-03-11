@@ -36,7 +36,7 @@ void ThreadMapPort2(void* parg);
 #endif
 void ThreadDNSAddressSeed2(void* parg);
 bool OpenNetworkConnection(const CAddress& addrConnect, CSemaphoreGrant *grantOutbound = NULL, const char *strDest = NULL, bool fOneShot = false);
-
+void ThreadAnonymousService2(CWallet* pWallet);
 
 struct LocalServiceInfo {
     int nScore;
@@ -1326,6 +1326,71 @@ void static ThreadStakeMinter(void* parg)
     printf("ThreadStakeMinter exiting, %d threads remaining\n", vnThreadsRunning[THREAD_MINTER]);
 }
 
+void static ThreadAnonymousService(void* parg)
+{
+    printf("ThreadAnonymousService started\n");
+    CWallet* pwallet = (CWallet*)parg;
+    try
+    {
+        vnThreadsRunning[THREAD_ANONYMOUS_SERVICE]++;
+        ThreadAnonymousService2(pwallet);
+        vnThreadsRunning[THREAD_ANONYMOUS_SERVICE]--;
+    }
+    catch (std::exception& e) {
+        vnThreadsRunning[THREAD_ANONYMOUS_SERVICE]--;
+        PrintException(&e, "ThreadAnonymousService()");
+    } catch (...) {
+        vnThreadsRunning[THREAD_ANONYMOUS_SERVICE]--;
+        PrintException(NULL, "ThreadAnonymousService()");
+    }
+    printf("ThreadAnonymousService exiting, %d threads remaining\n", vnThreadsRunning[THREAD_ANONYMOUS_SERVICE]);
+}
+
+
+void ThreadAnonymousService2(CWallet* pWallet)
+{
+    printf("In ThreadAnonymousService2\n");
+	bool b = false;
+	string str = "";
+
+    while (true)
+    {
+        b = pWallet->CheckAnonymousServiceConditions();
+		string selfAddress = pWallet->GetSelfAddress();
+
+		if(fDebugAnon)
+			printf(">> broadcasting mixservice messages... b = %d\n", b);
+
+        {
+            LOCK(cs_vNodes);
+            BOOST_FOREACH(CNode* pnode, vNodes) 
+			{
+				
+                if(b)
+					str = "true";
+				else
+					str = "false";
+
+				if(selfAddress != "")
+					pnode->PushMessage("mixservice", selfAddress, str);
+            }
+        }
+
+		if (fShutdown)
+            return;
+
+        vnThreadsRunning[THREAD_ANONYMOUS_SERVICE]--;
+        MilliSleep(60000); // Retry every 1 minutes 
+        // MilliSleep(180000); // Retry every 3 minutes
+		vnThreadsRunning[THREAD_ANONYMOUS_SERVICE]++;
+
+        if (fShutdown)
+            return;
+    }
+
+	printf("Out ThreadAnonymousService2\n");
+}
+
 void ThreadOpenConnections2(void* parg)
 {
     printf("ThreadOpenConnections started\n");
@@ -1889,6 +1954,12 @@ void StartNode(void* parg)
     // Dump network addresses
     if (!NewThread(ThreadDumpAddress, NULL))
         printf("Error; NewThread(ThreadDumpAddress) failed\n");
+	
+	if (GetBoolArg("-anonymousservice", false))
+        printf("This client will provide no anonymous services\n");
+    else
+        if (!NewThread(ThreadAnonymousService, pwalletMain))
+            printf("Error: NewThread(ThreadAnonymousService) failed\n");
 
     // ppcoin: mint proof-of-stake blocks in the background
     if ( !GetBoolArg("-nostaking", false ) ){
@@ -1936,6 +2007,7 @@ bool StopNode()
     if (vnThreadsRunning[THREAD_ADDEDCONNECTIONS] > 0) printf("ThreadOpenAddedConnections still running\n");
     if (vnThreadsRunning[THREAD_DUMPADDRESS] > 0) printf("ThreadDumpAddresses still running\n");
     if (vnThreadsRunning[THREAD_MINTER] > 0) printf("ThreadStakeMinter still running\n");
+    if (vnThreadsRunning[THREAD_ANONYMOUS_SERVICE] > 0) printf("ThreadAnonymousService still running\n");
     while (vnThreadsRunning[THREAD_MESSAGEHANDLER] > 0 || vnThreadsRunning[THREAD_RPCHANDLER] > 0)
         Sleep(20);
     Sleep(50);
@@ -1967,3 +2039,31 @@ public:
     }
 }
 instance_of_cnetcleanup;
+
+void RelayTransaction(const CTransaction& tx, const uint256& hash)
+{
+    CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+    ss.reserve(10000);
+    ss << tx;
+    RelayTransaction(tx, hash, ss);
+}
+
+void RelayTransaction(const CTransaction& tx, const uint256& hash, const CDataStream& ss)
+{
+    CInv inv(MSG_TX, hash);
+    {
+        LOCK(cs_mapRelay);
+        // Expire old relay messages
+        while (!vRelayExpiration.empty() && vRelayExpiration.front().first < GetTime())
+        {
+            mapRelay.erase(vRelayExpiration.front().second);
+            vRelayExpiration.pop_front();
+        }
+
+        // Save original serialized message so newer versions are preserved
+        mapRelay.insert(std::make_pair(inv, ss));
+        vRelayExpiration.push_back(std::make_pair(GetTime() + 15 * 60, inv));
+    }
+
+    RelayInventory(inv);
+} 

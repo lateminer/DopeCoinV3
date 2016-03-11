@@ -478,7 +478,7 @@ Value signrawtransaction(const Array& params, bool fHelp)
         {
             txin.scriptSig = CombineSignatures(prevPubKey, mergedTx, i, txin.scriptSig, txv.vin[i].scriptSig);
         }
-        if (!VerifyScript(txin.scriptSig, prevPubKey, mergedTx, i, true, 0))
+        if (!VerifyScript(txin.scriptSig, prevPubKey, mergedTx, i, 0))
             fComplete = false;
     }
 
@@ -537,6 +537,27 @@ Value sendrawtransaction(const Array& params, bool fHelp)
     RelayMessage(CInv(MSG_TX, hashTx), tx);
 
     return hashTx.GetHex();
+}
+
+Value getlastanontxinfo(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0)
+        throw runtime_error(
+            "getlastanontxinfo\n"
+            "Returns the last/current anonymous transaction info and log.");
+
+    return GetLastAnonymousTxLog();
+}
+
+
+Value listservicenodes(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0)
+        throw runtime_error(
+            "listservicenodes\n"
+            "Lists the currently connected service nodes.");
+
+    return GetCurrentServiceNodeList();
 }
 
 Value gettxfee(const Array& params, bool fHelp)  

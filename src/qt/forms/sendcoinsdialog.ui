@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>846</width>
-    <height>335</height>
+    <height>344</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,7 +40,7 @@
      <property name="frameShadow">
       <enum>QFrame::Plain</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayoutCoinControl2" stretch="0">
+     <layout class="QVBoxLayout" name="verticalLayoutCoinControl2" stretch="0,0">
       <property name="spacing">
        <number>6</number>
       </property>
@@ -713,6 +713,77 @@
         </item>
        </layout>
       </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayoutCoinControl7" stretch="0,0,0,0">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>5</number>
+        </property>
+        <item>
+         <widget class="QCheckBox" name="checkBoxAnonymousSend">
+          <property name="maximumSize">
+           <size>
+            <width>17</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="../bitcoin.qrc">:/icons/supersend</pixmap>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>5</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="styleSheet">
+           <string notr="true">QLabel { border:none; color: #3B3A3A; }</string>
+          </property>
+          <property name="text">
+           <string>Anonymous Send - each send is limited to max 100,000 DOPE. 1% fee (min 10 DOPE) will be added to the TX</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
      </layout>
     </widget>
    </item>
@@ -739,7 +810,7 @@
         <x>0</x>
         <y>0</y>
         <width>828</width>
-        <height>93</height>
+        <height>69</height>
        </rect>
       </property>
       <property name="styleSheet">

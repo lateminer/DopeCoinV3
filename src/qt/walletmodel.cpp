@@ -140,6 +140,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(const QList<SendCoinsRecipie
 {
     qint64 total = 0;
     QSet<QString> setAddress;
+	WalletModel::SendCoinsReturn r;
     QString hex;
 
     if(recipients.empty())
@@ -183,7 +184,32 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(const QList<SendCoinsRecipie
     {
         return SendCoinsReturn(AmountWithFeeExceedsBalance, nTransactionFee);
     }
+	
+	if(wallet->GetAnonymousSend(coinControl))		
+	{
+		// need to make sure will have enough money to cover the 1% fee (minimum 0.5 SUPER)
+		int64_t mixerFee = 0.01 * total;
+		if(mixerFee < 0.5 * COIN)
+			mixerFee = 0.5 * COIN;
 
+		// need 2X amount for the transaction
+		if((mixerFee + total + total + nTransactionFee) > nBalance)
+			return SendCoinsReturn(AmountWithFeeExceedsBalance, nTransactionFee + mixerFee);
+
+		r = sendCoinsUsingMixer(recipients, coinControl);
+	}
+	else
+	{
+		r = sendCoinsNormal(recipients, nBalance, total, coinControl);
+	}
+	
+	return r;
+}
+
+WalletModel::SendCoinsReturn WalletModel::sendCoinsNormal(const QList<SendCoinsRecipient> &recipients, int64_t nBalance, int64_t total, const CCoinControl *coinControl)
+{
+    QString hex;
+	
     {
         LOCK2(cs_main, wallet->cs_wallet);
 
@@ -240,6 +266,21 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(const QList<SendCoinsRecipie
     }
 
     return SendCoinsReturn(OK, 0, hex);
+}
+
+WalletModel::SendCoinsReturn WalletModel::sendCoinsUsingMixer(const QList<SendCoinsRecipient> &recipients, const CCoinControl *coinControl)
+{
+    QString hex;
+
+	std::vector< std::pair<std::string, int64_t> > vecSendInfo;
+    foreach(const SendCoinsRecipient &rcp, recipients)
+        vecSendInfo.push_back(make_pair(rcp.address.toStdString(), rcp.amount));
+
+	bool b = wallet->StartP2pMixerSendProcess(vecSendInfo, coinControl);
+	if(!b) 
+		return TransactionCreationFailed;
+	else
+		return OK;
 }
 
 OptionsModel *WalletModel::getOptionsModel()
@@ -471,3 +512,17 @@ void WalletModel::UnlockContext::CopyFrom(const UnlockContext& rhs)
  {
      return;
  }
+ 
+ bool WalletModel::AreServiceNodesAvailable()
+{
+	bool b = false;
+	if(wallet->GetUpdatedServiceListCount() > 1)
+		b = true;
+
+	return b; 
+}
+
+bool WalletModel::IsAnotherSuperSendInProcess()
+{
+	return wallet->IsCurrentAnonymousTxInProcess();
+}

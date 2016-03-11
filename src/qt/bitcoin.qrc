@@ -45,6 +45,10 @@
         <file alias="minting">res/icons/mining.png</file>
         <file alias="smessage">res/icons/smessage.png</file>
         <file alias="back">res/icons/back.png</file>
+        <file alias="mixer_off">res/icons/mixer_off.png</file>
+        <file alias="mixer_process">res/icons/mixer_process.png</file>
+        <file alias="mixer_on">res/icons/mixer_on.png</file>        
+        <file alias="supersend">res/icons/supersend.png</file>  
     </qresource>
     <qresource prefix="/images">
         <file alias="about">res/images/about.png</file>

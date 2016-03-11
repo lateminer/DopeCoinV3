@@ -16,6 +16,7 @@ public:
     {
         destChange = CNoDestination();
         setSelected.clear();
+		anonymousSend = false;
     }
     
     bool HasSelected() const
@@ -44,14 +45,26 @@ public:
         setSelected.clear();
     }
 
-    void ListSelected(std::vector<COutPoint>& vOutpoints)
+    void ListSelected(std::vector<COutPoint>& vOutpoints) const
     {
         vOutpoints.assign(setSelected.begin(), setSelected.end());
     }
+
+	void SetAnonymousSend(bool b)
+	{
+		anonymousSend = b;
+	}
+
+	bool GetAnonymousSend() const
+	{
+		return anonymousSend;
+	}
+        
         
 private:
     std::set<COutPoint> setSelected;
+	bool anonymousSend;
 
 };
 
-#endif // COINCONTROL_H
+#endif // COINCONTROL_H 

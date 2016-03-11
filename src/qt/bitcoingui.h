@@ -80,6 +80,7 @@ private:
     SignVerifyMessageDialog *signVerifyMessageDialog;
     BlockBrowser *blockPage;
 
+	QLabel *labelMixerIcon;
     QLabel *labelEncryptionIcon;
     QLabel *labelMintingIcon;
     QLabel *labelConnectionsIcon;
@@ -213,6 +214,8 @@ private slots:
     void updateMintingIcon();
     /** Update minting weight info */
     void updateMintingWeights();
+	
+	void updateMixerIcon();
 };
 
 #endif

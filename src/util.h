@@ -168,6 +168,7 @@ extern bool fTestNet;
 extern bool fNoListen;
 extern bool fLogTimestamps;
 extern bool fReopenDebugLog;
+extern bool fDebugAnon;
 
 void RandAddSeed();
 void RandAddSeedPerfmon();
@@ -243,14 +244,7 @@ std::string FormatFullVersion();
 std::string FormatSubVersion(const std::string& name, int nClientVersion, const std::vector<std::string>& comments);
 void AddTimeData(const CNetAddr& ip, int64 nTime);
 void runCommand(std::string strCommand);
-
-
-
-
-
-
-
-
+const std::string currentDateTime();
 
 inline std::string i64tostr(int64 n)
 {

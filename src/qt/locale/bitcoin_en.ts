@@ -720,6 +720,21 @@ Address: %4
         <source>Not minting.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location line="+1"/>
+        <source>Anonymous SuperSend Currently Processing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Anonymous SuperSend Available. %1 Anonymous Service Nodes Available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>SuperSend Not Available - You Do Not Have Enough Service Nodes Connected</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ClientModel</name>
@@ -1470,7 +1485,7 @@ Address: %4
     </message>
     <message>
         <location line="+3"/>
-        <source>custom change address</source>
+        <source>Anonymous Send - each send is limited to max 100,000 DOPE. 1% fee (min 10 DOPE) will be added to the TX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1548,7 +1563,6 @@ Address: %4
         <source>WARNING: unknown change address</source>
         <translation type="unfinished"></translation>
     </message>	
-	
     <message>
         <location line="+44"/>
         <source>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</source>
@@ -1741,6 +1755,21 @@ Address: %4
         <source>Error: The transaction was rejected. This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location line="+5"/>
+        <source>SuperSend only allows maximum of 100,000 DOPE now. Please reduce send amount or use regular send.</source>
+        <translation type="unfinished"></translation>
+    </message>	
+    <message>
+        <location line="+5"/>
+        <source>SuperSend requires at least 2 anonymous service nodes available. You don't have enough service nodes connected. Please use regular-send or try later.</source>
+        <translation type="unfinished"></translation>
+    </message>	
+    <message>
+        <location line="+5"/>
+        <source>Another SuperSend transaction still in progress. Please wait it finishes before starting a new SuperSend.</source>
+        <translation type="unfinished"></translation>
+    </message>		
 </context>
 <context>
     <name>SendCoinsEntry</name>

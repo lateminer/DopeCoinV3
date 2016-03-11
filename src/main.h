@@ -56,8 +56,8 @@ static const int64 nMaxClockDrift = 2 * 60 * 60;        // two hours
 
 extern CScript COINBASE_FLAGS;
 
-
 extern CCriticalSection cs_main;
+extern CCriticalSection cs_supersend;
 extern std::map<uint256, CBlockIndex*> mapBlockIndex;
 extern std::set<std::pair<COutPoint, unsigned int> > setStakeSeen;
 extern uint256 hashGenesisBlock;
@@ -126,16 +126,9 @@ const CBlockIndex* GetLastBlockIndex(const CBlockIndex* pindex, bool fProofOfSta
 void BitcoinMiner(CWallet *pwallet, bool fProofOfStake);
 void ResendWalletTransactions();
 
-
-
-
-
-
-
-
-
-
 bool GetWalletFile(CWallet* pwallet, std::string &strWalletFileOut);
+std::string GetLastAnonymousTxLog();
+std::string GetCurrentServiceNodeList();
 
 /** Position on disk for a particular transaction. */
 class CDiskTxPos
